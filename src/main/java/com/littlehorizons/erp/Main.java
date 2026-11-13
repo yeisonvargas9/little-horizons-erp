@@ -1,15 +1,23 @@
 package com.littlehorizons.erp;
 
+import com.littlehorizons.erp.controller.ProfessorController;
 import com.littlehorizons.erp.controller.StudentController;
+import com.littlehorizons.erp.dao.AssignmentDao;
 import com.littlehorizons.erp.dao.GuardianDao;
+import com.littlehorizons.erp.dao.ProfessorDao;
 import com.littlehorizons.erp.dao.StudentDao;
+import com.littlehorizons.erp.dao.SubjectDao;
+import com.littlehorizons.erp.dao.impl.AssignmentDaoImpl;
 import com.littlehorizons.erp.dao.impl.GuardianDaoImpl;
+import com.littlehorizons.erp.dao.impl.ProfessorDaoImpl;
 import com.littlehorizons.erp.dao.impl.StudentDaoImpl;
+import com.littlehorizons.erp.dao.impl.SubjectDaoImpl;
 import com.littlehorizons.erp.exception.DataAccessException;
 import com.littlehorizons.erp.util.AppLogger;
 import com.littlehorizons.erp.util.ConsoleInput;
 import com.littlehorizons.erp.util.DatabaseConnection;
 import com.littlehorizons.erp.view.MainMenuView;
+import com.littlehorizons.erp.view.ProfessorView;
 import com.littlehorizons.erp.view.StudentView;
 
 import java.io.FileDescriptor;
@@ -34,7 +42,13 @@ public class Main {
             StudentController studentController = new StudentController(studentDao, guardianDao);
             StudentView studentView = new StudentView(studentController, input);
 
-            new MainMenuView(input, studentView).run();
+            ProfessorDao professorDao = new ProfessorDaoImpl(database);
+            SubjectDao subjectDao = new SubjectDaoImpl(database);
+            AssignmentDao assignmentDao = new AssignmentDaoImpl(database);
+            ProfessorController professorController = new ProfessorController(professorDao, subjectDao, assignmentDao);
+            ProfessorView professorView = new ProfessorView(professorController, input);
+
+            new MainMenuView(input, studentView, professorView).run();
         } catch (DataAccessException e) {
             System.out.println("✖ " + e.getMessage());
         } catch (IllegalStateException e) {

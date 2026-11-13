@@ -5,6 +5,8 @@ import com.littlehorizons.erp.exception.OperationCancelledException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.Scanner;
 import java.util.function.Function;
@@ -17,6 +19,8 @@ import java.util.function.Predicate;
 public class ConsoleInput {
 
     public static final String CANCEL_KEYWORD = "cancelar";
+
+    private static final DateTimeFormatter TIME_FORMAT = DateTimeFormatter.ofPattern("H:mm");
 
     private final Scanner scanner;
 
@@ -110,6 +114,17 @@ public class ConsoleInput {
                 return LocalDate.parse(value);
             } catch (DateTimeParseException e) {
                 System.out.println("  ✖ Fecha inválida. Use el formato AAAA-MM-DD (ej: 2026-11-10).");
+            }
+        }
+    }
+
+    public LocalTime readTime(String prompt) {
+        while (true) {
+            String value = readRequired(prompt);
+            try {
+                return LocalTime.parse(value, TIME_FORMAT);
+            } catch (DateTimeParseException e) {
+                System.out.println("  ✖ Hora inválida. Use el formato HH:mm (ej: 07:30).");
             }
         }
     }
