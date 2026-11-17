@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 /** JDBC implementation of {@link AssignmentDao} (tables "asignaciones_profesor" and "horarios_clase"). */
 public class AssignmentDaoImpl implements AssignmentDao {
@@ -46,6 +47,22 @@ public class AssignmentDaoImpl implements AssignmentDao {
             }
         } catch (SQLException e) {
             throw fail("guardar la asignación", e);
+        }
+    }
+
+    @Override
+    public Optional<Integer> findProfessorId(int subjectId, int academicYear) {
+        String sql = "SELECT id_profesor FROM asignaciones_profesor WHERE id_materia = ? AND anio_academico = ? "
+                + "ORDER BY id_asignacion LIMIT 1";
+        try (Connection connection = database.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, subjectId);
+            statement.setInt(2, academicYear);
+            try (ResultSet rs = statement.executeQuery()) {
+                return rs.next() ? Optional.of(rs.getInt(1)) : Optional.empty();
+            }
+        } catch (SQLException e) {
+            throw fail("buscar el profesor de la materia", e);
         }
     }
 

@@ -8,12 +8,17 @@ public class MainMenuView {
 
     private final ConsoleInput input;
     private final StudentView studentView;
+    private final AcademicView academicView;
     private final ProfessorView professorView;
+    private final FinanceView financeView;
 
-    public MainMenuView(ConsoleInput input, StudentView studentView, ProfessorView professorView) {
+    public MainMenuView(ConsoleInput input, StudentView studentView, AcademicView academicView,
+                        ProfessorView professorView, FinanceView financeView) {
         this.input = input;
         this.studentView = studentView;
+        this.academicView = academicView;
         this.professorView = professorView;
+        this.financeView = financeView;
     }
 
     public void run() {
@@ -23,7 +28,9 @@ public class MainMenuView {
             try {
                 switch (input.readInt("Seleccione una opción", 1, 8)) {
                     case 1 -> studentView.run();
+                    case 2 -> academicView.run();
                     case 3 -> professorView.run();
+                    case 5 -> financeView.run();
                     case 8 -> exit = true;
                     default -> System.out.println("\n  ⚠ Este módulo estará disponible próximamente.");
                 }
