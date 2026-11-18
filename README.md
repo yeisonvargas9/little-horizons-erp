@@ -268,3 +268,4 @@ Proyecto académico distribuido bajo licencia **MIT** (ver archivo `LICENSE`).
 ## 15. Contacto
 
 Yeison Alberto Vargas Serrano — yavargas.iecrp2023@gmail.com
+
