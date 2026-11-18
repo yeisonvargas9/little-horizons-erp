@@ -1,21 +1,29 @@
 package com.littlehorizons.erp;
 
 import com.littlehorizons.erp.controller.AcademicController;
+import com.littlehorizons.erp.controller.ExtracurricularController;
 import com.littlehorizons.erp.controller.FinanceController;
 import com.littlehorizons.erp.controller.ProfessorController;
+import com.littlehorizons.erp.controller.ResourceController;
 import com.littlehorizons.erp.controller.StudentController;
 import com.littlehorizons.erp.dao.AcademicRecordDao;
 import com.littlehorizons.erp.dao.AssignmentDao;
 import com.littlehorizons.erp.dao.AttendanceDao;
 import com.littlehorizons.erp.dao.ChargeDao;
+import com.littlehorizons.erp.dao.ClubDao;
 import com.littlehorizons.erp.dao.ConceptDao;
 import com.littlehorizons.erp.dao.ConfigurationDao;
 import com.littlehorizons.erp.dao.CustomValueDao;
 import com.littlehorizons.erp.dao.EnrollmentDao;
+import com.littlehorizons.erp.dao.EventDao;
 import com.littlehorizons.erp.dao.GuardianDao;
 import com.littlehorizons.erp.dao.InvoiceDao;
+import com.littlehorizons.erp.dao.LoanDao;
+import com.littlehorizons.erp.dao.MembershipDao;
+import com.littlehorizons.erp.dao.ParticipationDao;
 import com.littlehorizons.erp.dao.PaymentDao;
 import com.littlehorizons.erp.dao.ProfessorDao;
+import com.littlehorizons.erp.dao.ResourceDao;
 import com.littlehorizons.erp.dao.StudentDao;
 import com.littlehorizons.erp.dao.SubjectDao;
 import com.littlehorizons.erp.dao.SubjectEnrollmentDao;
@@ -23,14 +31,20 @@ import com.littlehorizons.erp.dao.impl.AcademicRecordDaoImpl;
 import com.littlehorizons.erp.dao.impl.AssignmentDaoImpl;
 import com.littlehorizons.erp.dao.impl.AttendanceDaoImpl;
 import com.littlehorizons.erp.dao.impl.ChargeDaoImpl;
+import com.littlehorizons.erp.dao.impl.ClubDaoImpl;
 import com.littlehorizons.erp.dao.impl.ConceptDaoImpl;
 import com.littlehorizons.erp.dao.impl.ConfigurationDaoImpl;
 import com.littlehorizons.erp.dao.impl.CustomValueDaoImpl;
 import com.littlehorizons.erp.dao.impl.EnrollmentDaoImpl;
+import com.littlehorizons.erp.dao.impl.EventDaoImpl;
 import com.littlehorizons.erp.dao.impl.GuardianDaoImpl;
 import com.littlehorizons.erp.dao.impl.InvoiceDaoImpl;
+import com.littlehorizons.erp.dao.impl.LoanDaoImpl;
+import com.littlehorizons.erp.dao.impl.MembershipDaoImpl;
+import com.littlehorizons.erp.dao.impl.ParticipationDaoImpl;
 import com.littlehorizons.erp.dao.impl.PaymentDaoImpl;
 import com.littlehorizons.erp.dao.impl.ProfessorDaoImpl;
+import com.littlehorizons.erp.dao.impl.ResourceDaoImpl;
 import com.littlehorizons.erp.dao.impl.StudentDaoImpl;
 import com.littlehorizons.erp.dao.impl.SubjectDaoImpl;
 import com.littlehorizons.erp.dao.impl.SubjectEnrollmentDaoImpl;
@@ -40,10 +54,13 @@ import com.littlehorizons.erp.util.ConsoleInput;
 import com.littlehorizons.erp.util.DatabaseConnection;
 import com.littlehorizons.erp.util.InvoiceRenderer;
 import com.littlehorizons.erp.util.PdfInvoiceRenderer;
+import com.littlehorizons.erp.util.SqlExecutor;
 import com.littlehorizons.erp.view.AcademicView;
+import com.littlehorizons.erp.view.ExtracurricularView;
 import com.littlehorizons.erp.view.FinanceView;
 import com.littlehorizons.erp.view.MainMenuView;
 import com.littlehorizons.erp.view.ProfessorView;
+import com.littlehorizons.erp.view.ResourceView;
 import com.littlehorizons.erp.view.StudentView;
 
 import java.io.FileDescriptor;
@@ -94,7 +111,22 @@ public class Main {
                     invoiceDao, configurationDao, studentDao, guardianDao, invoiceRenderer);
             FinanceView financeView = new FinanceView(financeController, input);
 
-            new MainMenuView(input, studentView, academicView, professorView, financeView).run();
+            SqlExecutor sqlExecutor = new SqlExecutor(database);
+            ClubDao clubDao = new ClubDaoImpl(sqlExecutor);
+            MembershipDao membershipDao = new MembershipDaoImpl(sqlExecutor);
+            EventDao eventDao = new EventDaoImpl(sqlExecutor);
+            ParticipationDao participationDao = new ParticipationDaoImpl(sqlExecutor);
+            ExtracurricularController extracurricularController = new ExtracurricularController(clubDao, membershipDao,
+                    eventDao, participationDao, studentDao, professorDao);
+            ExtracurricularView extracurricularView = new ExtracurricularView(extracurricularController, input);
+
+            ResourceDao resourceDao = new ResourceDaoImpl(sqlExecutor);
+            LoanDao loanDao = new LoanDaoImpl(sqlExecutor);
+            ResourceController resourceController = new ResourceController(resourceDao, loanDao, studentDao, professorDao);
+            ResourceView resourceView = new ResourceView(resourceController, input);
+
+            new MainMenuView(input, studentView, academicView, professorView, financeView, extracurricularView,
+                    resourceView).run();
         } catch (DataAccessException e) {
             System.out.println("✖ " + e.getMessage());
         } catch (IllegalStateException e) {

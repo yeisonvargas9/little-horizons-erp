@@ -11,14 +11,19 @@ public class MainMenuView {
     private final AcademicView academicView;
     private final ProfessorView professorView;
     private final FinanceView financeView;
+    private final ExtracurricularView extracurricularView;
+    private final ResourceView resourceView;
 
     public MainMenuView(ConsoleInput input, StudentView studentView, AcademicView academicView,
-                        ProfessorView professorView, FinanceView financeView) {
+                        ProfessorView professorView, FinanceView financeView,
+                        ExtracurricularView extracurricularView, ResourceView resourceView) {
         this.input = input;
         this.studentView = studentView;
         this.academicView = academicView;
         this.professorView = professorView;
         this.financeView = financeView;
+        this.extracurricularView = extracurricularView;
+        this.resourceView = resourceView;
     }
 
     public void run() {
@@ -30,7 +35,9 @@ public class MainMenuView {
                     case 1 -> studentView.run();
                     case 2 -> academicView.run();
                     case 3 -> professorView.run();
+                    case 4 -> extracurricularView.run();
                     case 5 -> financeView.run();
+                    case 6 -> resourceView.run();
                     case 8 -> exit = true;
                     default -> System.out.println("\n  ⚠ Este módulo estará disponible próximamente.");
                 }
