@@ -4,6 +4,7 @@ import com.littlehorizons.erp.controller.AcademicController;
 import com.littlehorizons.erp.controller.ExtracurricularController;
 import com.littlehorizons.erp.controller.FinanceController;
 import com.littlehorizons.erp.controller.ProfessorController;
+import com.littlehorizons.erp.controller.ReportController;
 import com.littlehorizons.erp.controller.ResourceController;
 import com.littlehorizons.erp.controller.StudentController;
 import com.littlehorizons.erp.dao.AcademicRecordDao;
@@ -23,6 +24,7 @@ import com.littlehorizons.erp.dao.MembershipDao;
 import com.littlehorizons.erp.dao.ParticipationDao;
 import com.littlehorizons.erp.dao.PaymentDao;
 import com.littlehorizons.erp.dao.ProfessorDao;
+import com.littlehorizons.erp.dao.ReportDao;
 import com.littlehorizons.erp.dao.ResourceDao;
 import com.littlehorizons.erp.dao.StudentDao;
 import com.littlehorizons.erp.dao.SubjectDao;
@@ -44,6 +46,7 @@ import com.littlehorizons.erp.dao.impl.MembershipDaoImpl;
 import com.littlehorizons.erp.dao.impl.ParticipationDaoImpl;
 import com.littlehorizons.erp.dao.impl.PaymentDaoImpl;
 import com.littlehorizons.erp.dao.impl.ProfessorDaoImpl;
+import com.littlehorizons.erp.dao.impl.ReportDaoImpl;
 import com.littlehorizons.erp.dao.impl.ResourceDaoImpl;
 import com.littlehorizons.erp.dao.impl.StudentDaoImpl;
 import com.littlehorizons.erp.dao.impl.SubjectDaoImpl;
@@ -60,6 +63,7 @@ import com.littlehorizons.erp.view.ExtracurricularView;
 import com.littlehorizons.erp.view.FinanceView;
 import com.littlehorizons.erp.view.MainMenuView;
 import com.littlehorizons.erp.view.ProfessorView;
+import com.littlehorizons.erp.view.ReportView;
 import com.littlehorizons.erp.view.ResourceView;
 import com.littlehorizons.erp.view.StudentView;
 
@@ -125,8 +129,12 @@ public class Main {
             ResourceController resourceController = new ResourceController(resourceDao, loanDao, studentDao, professorDao);
             ResourceView resourceView = new ResourceView(resourceController, input);
 
+            ReportDao reportDao = new ReportDaoImpl(sqlExecutor);
+            ReportController reportController = new ReportController(reportDao);
+            ReportView reportView = new ReportView(reportController, input);
+
             new MainMenuView(input, studentView, academicView, professorView, financeView, extracurricularView,
-                    resourceView).run();
+                    resourceView, reportView).run();
         } catch (DataAccessException e) {
             System.out.println("✖ " + e.getMessage());
         } catch (IllegalStateException e) {

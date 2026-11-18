@@ -13,10 +13,12 @@ public class MainMenuView {
     private final FinanceView financeView;
     private final ExtracurricularView extracurricularView;
     private final ResourceView resourceView;
+    private final ReportView reportView;
 
     public MainMenuView(ConsoleInput input, StudentView studentView, AcademicView academicView,
                         ProfessorView professorView, FinanceView financeView,
-                        ExtracurricularView extracurricularView, ResourceView resourceView) {
+                        ExtracurricularView extracurricularView, ResourceView resourceView,
+                        ReportView reportView) {
         this.input = input;
         this.studentView = studentView;
         this.academicView = academicView;
@@ -24,6 +26,7 @@ public class MainMenuView {
         this.financeView = financeView;
         this.extracurricularView = extracurricularView;
         this.resourceView = resourceView;
+        this.reportView = reportView;
     }
 
     public void run() {
@@ -38,8 +41,9 @@ public class MainMenuView {
                     case 4 -> extracurricularView.run();
                     case 5 -> financeView.run();
                     case 6 -> resourceView.run();
+                    case 7 -> reportView.run();
                     case 8 -> exit = true;
-                    default -> System.out.println("\n  ⚠ Este módulo estará disponible próximamente.");
+                    default -> { }
                 }
             } catch (OperationCancelledException e) {
                 System.out.println("  Operación cancelada.");
