@@ -1,12 +1,14 @@
 package com.littlehorizons.erp;
 
 import com.littlehorizons.erp.controller.AcademicController;
+import com.littlehorizons.erp.controller.AcademicReportController;
 import com.littlehorizons.erp.controller.ExtracurricularController;
 import com.littlehorizons.erp.controller.FinanceController;
 import com.littlehorizons.erp.controller.ProfessorController;
 import com.littlehorizons.erp.controller.ReportController;
 import com.littlehorizons.erp.controller.ResourceController;
 import com.littlehorizons.erp.controller.StudentController;
+import com.littlehorizons.erp.dao.AcademicPerformanceDao;
 import com.littlehorizons.erp.dao.AcademicRecordDao;
 import com.littlehorizons.erp.dao.AssignmentDao;
 import com.littlehorizons.erp.dao.AttendanceDao;
@@ -29,6 +31,7 @@ import com.littlehorizons.erp.dao.ResourceDao;
 import com.littlehorizons.erp.dao.StudentDao;
 import com.littlehorizons.erp.dao.SubjectDao;
 import com.littlehorizons.erp.dao.SubjectEnrollmentDao;
+import com.littlehorizons.erp.dao.impl.AcademicPerformanceDaoImpl;
 import com.littlehorizons.erp.dao.impl.AcademicRecordDaoImpl;
 import com.littlehorizons.erp.dao.impl.AssignmentDaoImpl;
 import com.littlehorizons.erp.dao.impl.AttendanceDaoImpl;
@@ -58,6 +61,7 @@ import com.littlehorizons.erp.util.DatabaseConnection;
 import com.littlehorizons.erp.util.InvoiceRenderer;
 import com.littlehorizons.erp.util.PdfInvoiceRenderer;
 import com.littlehorizons.erp.util.SqlExecutor;
+import com.littlehorizons.erp.view.AcademicReportView;
 import com.littlehorizons.erp.view.AcademicView;
 import com.littlehorizons.erp.view.ExtracurricularView;
 import com.littlehorizons.erp.view.FinanceView;
@@ -102,7 +106,11 @@ public class Main {
             AttendanceDao attendanceDao = new AttendanceDaoImpl(database);
             AcademicController academicController = new AcademicController(studentDao, subjectDao, enrollmentDao,
                     subjectEnrollmentDao, recordDao, attendanceDao, assignmentDao);
-            AcademicView academicView = new AcademicView(academicController, input);
+            SqlExecutor sqlExecutor = new SqlExecutor(database);
+            AcademicPerformanceDao performanceDao = new AcademicPerformanceDaoImpl(sqlExecutor);
+            AcademicReportController academicReportController = new AcademicReportController(performanceDao);
+            AcademicReportView academicReportView = new AcademicReportView(academicReportController, input);
+            AcademicView academicView = new AcademicView(academicController, input, academicReportView);
 
             ConceptDao conceptDao = new ConceptDaoImpl(database);
             CustomValueDao customValueDao = new CustomValueDaoImpl(database);
@@ -115,7 +123,6 @@ public class Main {
                     invoiceDao, configurationDao, studentDao, guardianDao, invoiceRenderer);
             FinanceView financeView = new FinanceView(financeController, input);
 
-            SqlExecutor sqlExecutor = new SqlExecutor(database);
             ClubDao clubDao = new ClubDaoImpl(sqlExecutor);
             MembershipDao membershipDao = new MembershipDaoImpl(sqlExecutor);
             EventDao eventDao = new EventDaoImpl(sqlExecutor);

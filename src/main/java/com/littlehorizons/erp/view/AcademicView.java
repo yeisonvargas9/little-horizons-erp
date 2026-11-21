@@ -32,10 +32,12 @@ public class AcademicView {
 
     private final AcademicController controller;
     private final ConsoleInput input;
+    private final AcademicReportView reportView;
 
-    public AcademicView(AcademicController controller, ConsoleInput input) {
+    public AcademicView(AcademicController controller, ConsoleInput input, AcademicReportView reportView) {
         this.controller = controller;
         this.input = input;
+        this.reportView = reportView;
     }
 
     public void run() {
@@ -43,7 +45,7 @@ public class AcademicView {
         while (!back) {
             printMenu();
             try {
-                switch (input.readInt("Seleccione una opción", 0, 9)) {
+                switch (input.readInt("Seleccione una opción", 0, 10)) {
                     case 1 -> enrollInGrade();
                     case 2 -> showEnrollments();
                     case 3 -> enrollInSubjects();
@@ -53,6 +55,7 @@ public class AcademicView {
                     case 7 -> showCourseAverages();
                     case 8 -> registerAttendance();
                     case 9 -> showAbsenceReport();
+                    case 10 -> reportView.show();
                     case 0 -> back = true;
                     default -> { }
                 }
@@ -77,6 +80,7 @@ public class AcademicView {
         System.out.println("7. Ver promedio del curso por materia");
         System.out.println("8. Registrar asistencia de una clase");
         System.out.println("9. Reporte de inasistencias de la semana");
+        System.out.println("10. Generar Reporte de Rendimiento Académico por Materia");
         System.out.println("0. Volver al menú principal");
         System.out.println();
     }
